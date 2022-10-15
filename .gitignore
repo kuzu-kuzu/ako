@@ -1,0 +1,8 @@
+# destination
+dist/
+
+# Node.js
+node_modules/
+
+# .env
+.env
