@@ -4,6 +4,7 @@ import { randomUUID } from 'node:crypto';
 import { logger } from '~/libs/logger';
 import Queue from 'queue';
 import { composeCompactFrame } from '~/features/compose-frame/utils/composeCompactFrame';
+import { type SlashCommandSubcommandBuilder } from 'discord.js';
 
 export const queue = new Queue({
   concurrency: 1,
@@ -11,41 +12,45 @@ export const queue = new Queue({
   autostart: true
 });
 
+const addOptions = (option: SlashCommandSubcommandBuilder): SlashCommandSubcommandBuilder => (
+  option
+    .addUserOption(option => (
+      option
+        .setName('user')
+        .setDescription('The user whose avatar is used for frame composition. If omitted, the executor is specified.')
+        .setDescriptionLocalization('ja', 'フレーム合成に使用するアバターのユーザー。省略した場合は、実行者が指定されます。')
+    ))
+    .addStringOption(option => (
+      option
+        .setName('accent-colors')
+        .setDescription('Frame color. Gradient if multiple specifiers are specified with whitespace separator.')
+        .setDescriptionLocalization('ja', 'フレームの色。空白区切りで複数指定するとグラデーション。')
+    ))
+    .addStringOption(option => (
+      option
+        .setName('bg-colors')
+        .setDescription('Background color of the frame. Multiple specifications, separated by whitespace, create a gradient.')
+        .setDescriptionLocalization('ja', 'フレームの背景色。空白区切りで複数指定するとグラデーション。')
+    ))
+);
+
 export default new Command({
   data: builder => (
     builder
-      .setName('frame')
+      .setName('avatar-frame')
       .setDescription('This command is used to add frames to icons and other objects.')
-      .setDescriptionLocalization('ja', 'アイコンなどにフレームを追加するコマンドです。')
-      .addSubcommand(option => (
+      .setDescriptionLocalization('ja', 'アバターなどにフレームを追加するコマンドです。')
+      .addSubcommand(option => addOptions(
         option
-          .setName('avatar')
-          .setDescription('Add a frame to the avatar.')
-          .setDescriptionLocalization('ja', 'アバターにフレームを追加します。')
-          .addUserOption(option => (
-            option
-              .setName('user')
-              .setDescription('The user whose avatar is used for frame composition. If omitted, the executor is specified.')
-              .setDescriptionLocalization('ja', 'フレーム合成に使用するアバターのユーザー。省略した場合は、実行者が指定されます。')
-          ))
-          .addStringOption(option => (
-            option
-              .setName('type')
-              .setDescription('Frame type. Currently, "usual" and "compact" can be specified. If omitted, "usual" is used.')
-              .setDescriptionLocalization('ja', '使用するフレームのタイプ。現在は「usual」と「compact」を指定可。省略した場合は「compact」。')
-          ))
-          .addStringOption(option => (
-            option
-              .setName('accent-colors')
-              .setDescription('Frame color. Gradient if multiple specifiers are specified with whitespace separator.')
-              .setDescriptionLocalization('ja', 'フレームの色。空白区切りで複数指定するとグラデーション。')
-          ))
-          .addStringOption(option => (
-            option
-              .setName('bg-colors')
-              .setDescription('Background color of the frame. Multiple specifications, separated by whitespace, create a gradient.')
-              .setDescriptionLocalization('ja', 'フレームの背景色。空白区切りで複数指定するとグラデーション。')
-          ))
+          .setName('classic')
+          .setDescription('Add the classic type of frame to the avatar.')
+          .setDescriptionLocalization('ja', '従来のタイプのフレームをアバターに追加します。')
+      ))
+      .addSubcommand(option => addOptions(
+        option
+          .setName('compact')
+          .setDescription('Add a compact type frame to the avatar.')
+          .setDescriptionLocalization('ja', 'コンパクトタイプのフレームをアバターに追加します。')
       ))
   ),
   execute: async interaction => {
@@ -59,8 +64,8 @@ export default new Command({
       return;
     }
 
+    const type = interaction.options.getSubcommand() ?? 'compact';
     const user = interaction.options.getUser('user') ?? interaction.user;
-    const type = interaction.options.getString('type') ?? 'compact';
     const accentColors = interaction.options.getString('accent-colors') ?? '#fff';
     const bgColors = interaction.options.getString('bg-colors') ?? '#000 #c80000';
     const avatarUrl = user.displayAvatarURL({
