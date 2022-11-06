@@ -42,6 +42,16 @@ export default new Command({
       ))
   ),
   execute: async interaction => {
+    if (!interaction.inGuild()) {
+      if (interaction.locale === 'ja') {
+        interaction.editReply('このコマンドはギルド内で実行する必要があります');
+      } else {
+        interaction.editReply('This command must be executed within the guild');
+      }
+
+      return;
+    }
+
     const user = interaction.options.getUser('user') ?? interaction.user;
     const accentColors = interaction.options.getString('accent-colors') ?? '#fff';
     const bgColors = interaction.options.getString('bg-colors') ?? '#000 #c80000';
