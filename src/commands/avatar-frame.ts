@@ -1,5 +1,5 @@
 import { Command } from '~/features/bot/models/Command';
-import { composeUsualFrame } from '~/features/compose-frame/utils/composeUsualFrame';
+import { composeClassicFrame } from '~/features/compose-frame/utils/composeClassicFrame';
 import { randomUUID } from 'node:crypto';
 import { logger } from '~/libs/logger';
 import Queue from 'queue';
@@ -91,7 +91,7 @@ export default new Command({
 
     queue.push(async () => {
       try {
-        const composeFrame = type === 'compact' ? composeCompactFrame : composeUsualFrame;
+        const composeFrame = type === 'compact' ? composeCompactFrame : composeClassicFrame;
         const image = await composeFrame(avatarUrl, {
           accentColors: accentColors?.split(/\s+/),
           backgroundColors: bgColors?.split(/\s+/)
@@ -138,9 +138,9 @@ export default new Command({
 
         if (!timedOut) {
           if (interaction.locale === 'ja') {
-            await interaction.editReply('無効な色が含まれています');
+            await interaction.editReply('無効な色が含まれています。16進数の場合は色の名前と区別するために#をつけてください');
           } else {
-            await interaction.editReply('Contains invalid colors');
+            await interaction.editReply('Contains invalid colors; if hexadecimal, add # to distinguish it from the color name');
           }
         }
       }

@@ -4,7 +4,7 @@ import { ComposeFrameOptions } from '~/features/compose-frame/types/ComposeFrame
 import { ImageSource } from '~/features/compose-frame/types/ImageSource';
 import { changeImageColor } from '~/features/compose-frame/utils/changeImageColor';
 import { createLinearGradient } from '~/features/compose-frame/utils/createLinearGradient';
-import { getUsualFrameImage } from '~/features/compose-frame/utils/getUsualFrameImage';
+import { getClassicFrameImage } from '~/features/compose-frame/utils/getClassicFrameImage';
 
 export const MARGIN = 5;
 export const INNER_ARC_SIZE_RATE = 0.7407407407407408;
@@ -15,7 +15,7 @@ export const innerArcHalfSize = innerArcSize / 2;
 export const center = halfSize - innerArcHalfSize;
 export const innerArcCenter = center + innerArcHalfSize;
 
-export const composeUsualFrame = async (
+export const composeClassicFrame = async (
   src: ImageSource,
   {
     accentColors,
@@ -47,7 +47,7 @@ export const composeUsualFrame = async (
 
   ctx.restore();
   ctx.drawImage(
-    await changeImageColor(await getUsualFrameImage(), accentColors),
+    await changeImageColor(await getClassicFrameImage(), accentColors, [SIZE, SIZE]),
     0, 0, SIZE, SIZE
   );
 

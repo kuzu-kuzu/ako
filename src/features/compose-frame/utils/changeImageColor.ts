@@ -6,13 +6,11 @@ export const changeImageColor = async (
   colors: CanvasGradient | readonly string[],
   [width, height]: readonly [width: number, height: number] = [img.naturalWidth, img.naturalHeight],
 ): Promise<Image> => {
-  const w = img.naturalWidth;
-  const h = img.naturalHeight;
-  const cv = createCanvas(img.naturalWidth, img.naturalHeight);
+  const cv = createCanvas(width, height);
   const ctx = cv.getContext('2d');
 
   ctx.fillStyle = colors instanceof CanvasGradient ? colors : createLinearGradient(ctx, colors);
-  ctx.fillRect(0, 0, w, h);
+  ctx.fillRect(0, 0, width, height);
   ctx.globalCompositeOperation = 'destination-atop';
   ctx.drawImage(img, 0, 0, width, height);
 
