@@ -1,10 +1,10 @@
 import { loadImage, createCanvas } from 'canvas';
 import type { ImageSource } from '~/features/compose-frame/types/ImageSource';
-import { SIZE } from '../const/SIZE';
-import type { ComposeFrameOptions } from '../types/ComposeFrameOptions';
-import { changeImageColor } from './changeImageColor';
-import { createLinearGradient } from './createLinearGradient';
-import { getCompactFrameImages } from './getCompactFrameCovers';
+import { SIZE } from '~/features/compose-frame/const/SIZE';
+import type { ComposeFrameOptions } from '~/features/compose-frame/types/ComposeFrameOptions';
+import { changeImageColor } from '~/features/compose-frame/utils/changeImageColor';
+import { createLinearGradient } from '~/features/compose-frame/utils/createLinearGradient';
+import { getCompactFrameImages } from '~/features/compose-frame/utils/getCompactFrameCovers';
 
 export const RESIZE_RATE = 0.68;
 export const INNER_ARC_SIZE_RATE = 0.7407407407407408;

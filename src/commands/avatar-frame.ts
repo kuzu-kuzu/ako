@@ -12,7 +12,7 @@ export const queue = new Queue({
   autostart: true
 });
 
-const addOptions = (option: SlashCommandSubcommandBuilder): SlashCommandSubcommandBuilder => (
+export const addOptions = (option: SlashCommandSubcommandBuilder): SlashCommandSubcommandBuilder => (
   option
     .addUserOption(option => (
       option

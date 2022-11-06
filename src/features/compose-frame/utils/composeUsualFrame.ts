@@ -1,10 +1,10 @@
 import { createCanvas, loadImage } from 'canvas';
-import { SIZE } from '../const/SIZE';
-import { ComposeFrameOptions } from '../types/ComposeFrameOptions';
-import { ImageSource } from '../types/ImageSource';
-import { changeImageColor } from './changeImageColor';
-import { createLinearGradient } from './createLinearGradient';
-import { getUsualFrameImage } from './getUsualFrameImage';
+import { SIZE } from '~/features/compose-frame/const/SIZE';
+import { ComposeFrameOptions } from '~/features/compose-frame/types/ComposeFrameOptions';
+import { ImageSource } from '~/features/compose-frame/types/ImageSource';
+import { changeImageColor } from '~/features/compose-frame/utils/changeImageColor';
+import { createLinearGradient } from '~/features/compose-frame/utils/createLinearGradient';
+import { getUsualFrameImage } from '~/features/compose-frame/utils/getUsualFrameImage';
 
 export const MARGIN = 5;
 export const INNER_ARC_SIZE_RATE = 0.7407407407407408;

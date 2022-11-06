@@ -1,6 +1,6 @@
 import { CanvasGradient, type CanvasRenderingContext2D } from 'canvas';
 import parseCssColor from 'parse-css-color';
-import { SIZE } from '../const/SIZE';
+import { SIZE } from '~/features/compose-frame/const/SIZE';
 
 export const createLinearGradient = (ctx: CanvasRenderingContext2D, colors: readonly string[]): CanvasGradient => {
   const gradient = ctx.createLinearGradient(0, 0, SIZE, SIZE);
