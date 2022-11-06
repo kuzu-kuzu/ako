@@ -1,6 +1,7 @@
 import { Bot } from '~/features/bot/models/Bot';
 import { logger } from '~/libs/logger';
 import { join as joinPath } from 'node:path';
+import { createServer } from 'node:http';
 import { config as configDotenv } from 'dotenv';
 
 configDotenv();
@@ -19,3 +20,12 @@ const bot = new Bot({
 });
 
 bot.login();
+
+const server = createServer((_req, res) => {
+  res.writeHead(200, {
+    'Content-Type': 'text/plain'
+  });
+  res.end('ok');
+});
+
+server.listen(3000);

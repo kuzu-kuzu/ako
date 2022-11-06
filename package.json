@@ -2,7 +2,7 @@
   "name": "ako",
   "version": "1.0.0",
   "description": "It is a multifunctional Discord bot dedicated to a specific server.",
-  "main": "./dist/app/bot.js",
+  "main": "./dist/app/index.js",
   "scripts": {
     "prebuild": "rimraf ./dist/",
     "build": "run-s build:*",
