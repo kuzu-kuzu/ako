@@ -4,7 +4,7 @@ export const FRAME_IMAGE_URL = 'https://cdn.discordapp.com/attachments/906420165
 
 export let cachedFrameImage: Image | undefined;
 
-export const getFrameImage = async (): Promise<Image> => {
+export const getUsualFrameImage = async (): Promise<Image> => {
   if (cachedFrameImage) {
     return cachedFrameImage;
   }

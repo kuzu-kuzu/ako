@@ -1,12 +1,13 @@
 import { Command } from '~/features/bot/models/Command';
-import { composeAvatarFrame } from '~/features/compose-frame/utils/composeAvatarFrame';
+import { composeUsualFrame } from '~/features/compose-frame/utils/composeUsualFrame';
 import { randomUUID } from 'node:crypto';
 import { logger } from '~/libs/logger';
 import Queue from 'queue';
+import { composeCompactFrame } from '~/features/compose-frame/utils/composeCompactFrame';
 
 export const queue = new Queue({
   concurrency: 1,
-  timeout: 1000,
+  timeout: 2000,
   autostart: true
 });
 
@@ -26,6 +27,12 @@ export default new Command({
               .setName('user')
               .setDescription('The user whose avatar is used for frame composition. If omitted, the executor is specified.')
               .setDescriptionLocalization('ja', 'フレーム合成に使用するアバターのユーザー。省略した場合は、実行者が指定されます。')
+          ))
+          .addStringOption(option => (
+            option
+              .setName('type')
+              .setDescription('Frame type. Currently, "usual" and "compact" can be specified. If omitted, "usual" is used.')
+              .setDescriptionLocalization('ja', '使用するフレームのタイプ。現在は「usual」と「compact」を指定可。省略した場合は「compact」。')
           ))
           .addStringOption(option => (
             option
@@ -53,6 +60,7 @@ export default new Command({
     }
 
     const user = interaction.options.getUser('user') ?? interaction.user;
+    const type = interaction.options.getString('type') ?? 'compact';
     const accentColors = interaction.options.getString('accent-colors') ?? '#fff';
     const bgColors = interaction.options.getString('bg-colors') ?? '#000 #c80000';
     const avatarUrl = user.displayAvatarURL({
@@ -78,7 +86,11 @@ export default new Command({
 
     queue.push(async () => {
       try {
-        const image = await composeAvatarFrame(avatarUrl, accentColors?.split(/\s+/), bgColors?.split(/\s+/));
+        const composeFrame = type === 'compact' ? composeCompactFrame : composeUsualFrame;
+        const image = await composeFrame(avatarUrl, {
+          accentColors: accentColors?.split(/\s+/),
+          backgroundColors: bgColors?.split(/\s+/)
+        });
         const name = randomUUID({ disableEntropyCache: true });
 
         off();

@@ -1,11 +1,12 @@
 import { createCanvas, loadImage } from 'canvas';
-import { createLinearGradient } from '~/features/compose-frame/utils/createLinearGradient';
-import { getFrameImage } from '~/features/compose-frame/utils/getFrameImage';
+import { SIZE } from '../const/SIZE';
+import { ComposeFrameOptions } from '../types/ComposeFrameOptions';
+import { ImageSource } from '../types/ImageSource';
 import { changeImageColor } from './changeImageColor';
+import { createLinearGradient } from './createLinearGradient';
+import { getUsualFrameImage } from './getUsualFrameImage';
 
-export const TAU = Math.PI * 2;
 export const MARGIN = 5;
-export const SIZE = 256;
 export const INNER_ARC_SIZE_RATE = 0.7407407407407408;
 
 export const halfSize = SIZE / 2;
@@ -14,21 +15,27 @@ export const innerArcHalfSize = innerArcSize / 2;
 export const center = halfSize - innerArcHalfSize;
 export const innerArcCenter = center + innerArcHalfSize;
 
-export const composeAvatarFrame = async (src: Buffer | string, accentColors: readonly string[], bgColors: readonly string[]): Promise<Buffer> => {
+export const composeUsualFrame = async (
+  src: ImageSource,
+  {
+    accentColors,
+    backgroundColors,
+  }: ComposeFrameOptions
+): Promise<Buffer> => {
   const cv = createCanvas(SIZE, SIZE);
   const ctx = cv.getContext('2d');
 
   ctx.beginPath();
-  ctx.arc(halfSize, halfSize, halfSize - MARGIN, 0, TAU);
+  ctx.arc(halfSize, halfSize, halfSize - MARGIN, 0, Math.PI * 2);
 
-  ctx.fillStyle = createLinearGradient(ctx, SIZE, bgColors);
+  ctx.fillStyle = createLinearGradient(ctx, backgroundColors);
   ctx.fill();
 
   ctx.save();
   ctx.beginPath();
   ctx.arc(
     innerArcCenter, innerArcCenter,
-    innerArcHalfSize, 0, TAU
+    innerArcHalfSize, 0, Math.PI * 2
   );
 
   ctx.clip();
@@ -40,7 +47,7 @@ export const composeAvatarFrame = async (src: Buffer | string, accentColors: rea
 
   ctx.restore();
   ctx.drawImage(
-    await changeImageColor(await getFrameImage(), SIZE, accentColors),
+    await changeImageColor(await getUsualFrameImage(), accentColors),
     0, 0, SIZE, SIZE
   );
 
