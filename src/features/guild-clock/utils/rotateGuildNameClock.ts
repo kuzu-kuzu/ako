@@ -12,12 +12,7 @@ dayjs.extend(timezone);
 export const guildNameClockRegex = /[🕛🕐🕑🕒🕓🕔🕕🕖🕗🕘🕙🕚]\d{1,2}時/u;
 
 export const rotateGuildNameClock = async (guilds: GuildManager): Promise<void> => {
-  const day = dayjs().tz('Asia/Tokyo');
-  const now = day.toDate();
-
-  now.setMinutes(0, 0, 0);
-
-  const hours = now.getHours();
+  const now = dayjs().tz('Asia/Tokyo').minute(0).second(0).millisecond(0);
   const emoji = timeToEmoji(now);
 
   for (const [, guild] of await guilds.fetch()) {
@@ -39,7 +34,7 @@ export const rotateGuildNameClock = async (guilds: GuildManager): Promise<void> 
 
     const notOauth2 = await guilds.fetch(guild.id);
 
-    await notOauth2.setName(notOauth2.name.replace(guildNameClockRegex, `${emoji}${hours}時`));
+    await notOauth2.setName(notOauth2.name.replace(guildNameClockRegex, `${emoji}${now.hour()}時`));
 
     logger.info(`Successfully processed guild clock on server (id ${hashed})`);
   }

@@ -1,3 +1,5 @@
 declare module 'node-emoji-clock' {
-  const timeToEmoji: (time: Date) => string;
+  import { type Dayjs } from 'dayjs';
+
+  const timeToEmoji: (time: Date | Dayjs) => string;
 }
