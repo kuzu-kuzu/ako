@@ -1,6 +1,7 @@
 import { Bot } from '~/features/bot/models/Bot';
 import { logger } from '~/libs/logger';
 import { join as joinPath } from 'node:path';
+import { GatewayIntentBits } from 'discord.js';
 import { createServer } from 'node:http';
 import { config as configDotenv } from 'dotenv';
 
@@ -15,8 +16,8 @@ if (!DISCORD_BOT_TOKEN) {
 
 const bot = new Bot({
   token: DISCORD_BOT_TOKEN,
-  intents: 0,
-  commandsDirPath: joinPath(__dirname, '../commands/')
+  intents: GatewayIntentBits.Guilds,
+  commandsDirPath: joinPath(__dirname, '../commands/'),
 });
 
 bot.login();

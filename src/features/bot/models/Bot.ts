@@ -1,7 +1,9 @@
 import { Client, type ClientOptions, Collection, Events } from 'discord.js';
 import { Command } from '~/features/bot/models/Command';
 import { logger } from '~/libs/logger';
+import { schedule } from 'node-cron';
 import { getCommands } from '~/features/bot/utils/getCommands';
+import { rotateGuildNameClock } from '~/features/guild-clock/utils/rotateGuildNameClock';
 
 export type BotOptions = Readonly<ClientOptions & {
   token: string,
@@ -25,7 +27,7 @@ export class Bot {
     const commandsDirPath = this.#commandsDirPath;
     const commands = this.#commands;
 
-    client.on(Events.ClientReady, async ({ user, application }) => {
+    client.on(Events.ClientReady, async ({ guilds, user, application }) => {
       logger.info(`Successfully logged in as ${user.tag} (${user.id})`);
 
       for await (const command of getCommands(commandsDirPath)) {
@@ -34,6 +36,12 @@ export class Bot {
 
         logger.info(`Command "${command.data.name}" was successfully created`);
       }
+
+      rotateGuildNameClock(guilds);
+
+      schedule('0 * * * *', () => {
+        rotateGuildNameClock(guilds);
+      });
     });
 
     client.on(Events.InteractionCreate, interaction => {
