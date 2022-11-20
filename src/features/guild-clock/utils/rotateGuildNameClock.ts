@@ -1,12 +1,19 @@
 import { PermissionFlagsBits, GuildManager } from 'discord.js';
 import { logger } from '~/libs/logger';
 import { createHash } from 'node:crypto';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 import { timeToEmoji } from 'node-emoji-clock';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export const guildNameClockRegex = /[🕛🕐🕑🕒🕓🕔🕕🕖🕗🕘🕙🕚]\d{1,2}時/u;
 
 export const rotateGuildNameClock = async (guilds: GuildManager): Promise<void> => {
-  const now = new Date();
+  const day = dayjs().tz('Asia/Tokyo');
+  const now = day.toDate();
 
   now.setMinutes(0, 0, 0);
 
