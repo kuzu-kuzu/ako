@@ -32,6 +32,12 @@ export const addOptions = (option: SlashCommandSubcommandBuilder): SlashCommandS
         .setDescription('Background color of the frame. Multiple specifications, separated by whitespace, create a gradient.')
         .setDescriptionLocalization('ja', 'フレームの背景色。空白区切りで複数指定するとグラデーション。')
     ))
+    .addBooleanOption(option => (
+      option
+        .setName('bg-only')
+        .setDescription('If this flag is on, only the background color is composited. Off by default.')
+        .setDescriptionLocalization('ja', 'このフラグがオンの場合、背景色のみ合成します。デフォルトでオフ。')
+    ))
 );
 
 export default new Command({
@@ -68,6 +74,7 @@ export default new Command({
     const user = interaction.options.getUser('user') ?? interaction.user;
     const accentColors = interaction.options.getString('accent-colors') ?? '#fff';
     const bgColors = interaction.options.getString('bg-colors') ?? '#000 #c80000';
+    const bgOnly = interaction.options.getBoolean('bg-only') ?? false;
     const avatarUrl = user.displayAvatarURL({
       extension: 'png',
       size: 256
@@ -94,7 +101,8 @@ export default new Command({
         const composeFrame = type === 'compact' ? composeCompactFrame : composeClassicFrame;
         const image = await composeFrame(avatarUrl, {
           accentColors: accentColors?.split(/\s+/),
-          backgroundColors: bgColors?.split(/\s+/)
+          backgroundColors: bgColors?.split(/\s+/),
+          backgroundOnly: bgOnly
         });
         const name = randomUUID({ disableEntropyCache: true });
 

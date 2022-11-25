@@ -20,6 +20,7 @@ export const composeClassicFrame = async (
   {
     accentColors,
     backgroundColors,
+    backgroundOnly = false
   }: ComposeFrameOptions
 ): Promise<Buffer> => {
   const cv = createCanvas(SIZE, SIZE);
@@ -46,10 +47,13 @@ export const composeClassicFrame = async (
   );
 
   ctx.restore();
-  ctx.drawImage(
-    await changeImageColor(await getClassicFrameImage(), accentColors, [SIZE, SIZE]),
-    0, 0, SIZE, SIZE
-  );
+
+  if (!backgroundOnly) {
+    ctx.drawImage(
+      await changeImageColor(await getClassicFrameImage(), accentColors, [SIZE, SIZE]),
+      0, 0, SIZE, SIZE
+    );
+  }
 
   return cv.toBuffer('image/png');
 };

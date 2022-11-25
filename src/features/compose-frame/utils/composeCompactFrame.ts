@@ -20,6 +20,7 @@ export const composeCompactFrame = async (
   {
     accentColors,
     backgroundColors,
+    backgroundOnly = false
   }: ComposeFrameOptions
 ): Promise<Buffer> => {
   const cv = createCanvas(SIZE, SIZE);
@@ -59,10 +60,13 @@ export const composeCompactFrame = async (
     await changeImageColor(images.symbolCover, backgroundGradient),
     80, 10
   );
-  ctx.drawImage(
-    await changeImageColor(images.frame, accentGradient),
-    0, 0
-  );
+
+  if (!backgroundOnly) {
+    ctx.drawImage(
+      await changeImageColor(images.frame, accentGradient),
+      0, 0
+    );
+  }
 
   return cv.toBuffer('image/png');
 };
