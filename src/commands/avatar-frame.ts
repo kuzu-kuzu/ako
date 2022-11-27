@@ -100,8 +100,8 @@ export default new Command({
       try {
         const composeFrame = type === 'compact' ? composeCompactFrame : composeClassicFrame;
         const image = await composeFrame(avatarUrl, {
-          accentColors: accentColors?.split(/\s+/),
-          backgroundColors: bgColors?.split(/\s+/),
+          accentColors: accentColors?.split(/\s*,\s*|\s+/),
+          backgroundColors: bgColors?.split(/\s*,\s*|\s+/),
           backgroundOnly: bgOnly
         });
         const name = randomUUID({ disableEntropyCache: true });
